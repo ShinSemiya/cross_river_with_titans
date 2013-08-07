@@ -6,6 +6,7 @@ class Coast
   def initialize(number = 3)
     @max_number = number
     @matrix     = set_up_matrix(number)
+    @boat = Boat.new
   end
 
   def ship_without_predation?(x, y)
