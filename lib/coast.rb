@@ -8,6 +8,10 @@ class Coast
     @matrix     = set_up_matrix(number)
   end
 
+  # matrix上に人数配置ごとの兵士が食べられるときと食べられないときをプロットする
+  # matrix において右岸の兵士と巨人がそれぞれx人とy人だったとき、
+  # 座標(x,y) = 1なら兵士は食べられない
+  # 座標(x,y) = 0なら兵士は巨人に食べられる
   def set_up_matrix(matrix_size)
     matrix = []
     0.upto(matrix_size) {|y| matrix << set_up_row(y) }
@@ -21,9 +25,9 @@ class Coast
   end
 
   def set_up_cell(x, y)
-    if y == 0 ||
-       y == max_number ||
-       y == x
+    if y == 0 ||          # 巨人が全員左岸にいる
+       y == max_number || # 巨人が全員右岸にいる
+       y == x             # 両岸で兵士と巨人の人数が釣り合っている
       return 1
     end
     0
