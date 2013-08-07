@@ -8,10 +8,20 @@ class Coast
     @matrix     = set_up_matrix(number)
   end
 
+  def ship_without_predation?(x, y)
+    # 座標(x, y)のとき一往復で左岸から１人以上右岸に運ぶときの人数の変化は5通り
+    # (x+1,y-1)はmatrixの組み合わせ上ありえない
+    matrix[x + 2, y - 1] == 1 ||
+    matrix[x + 1, y    ] == 1 ||
+    matrix[x    , y + 1] == 1 ||
+    matrix[x - 1, y + 1] == 1 ||
+    matrix[x - 1, y + 2] == 1
+  end
+
   # matrix上に人数配置ごとの兵士が食べられるときと食べられないときをプロットする
   # matrix において右岸の兵士と巨人がそれぞれx人とy人だったとき、
-  # 座標(x,y) = 1なら兵士は食べられない
-  # 座標(x,y) = 0なら兵士は巨人に食べられる
+  # 座標(x,y) = 1なら兵士は巨人に食べられないので、移動できる
+  # 座標(x,y) = 0なら兵士は巨人に食べられるので、移動できない
   def set_up_matrix(matrix_size)
     matrix = []
     0.upto(matrix_size) {|y| matrix << set_up_row(y) }
