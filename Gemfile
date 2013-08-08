@@ -6,6 +6,8 @@ group :development do
   gem 'guard-rspec'
 
   gem 'pry'
+  gem 'pry-debugger'
+  gem 'pry-rails'
   # Runs on Mac OS X
   gem 'growl'
   # Runs on Linux, FreeBSD, OpenBSD and Solaris
