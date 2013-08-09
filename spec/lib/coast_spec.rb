@@ -245,7 +245,7 @@ describe Coast do
     end
   end
 
-  describe "to_left" do
+  describe "battery" do
     context "in NG_cell" do
       it "return false" do
         params =
@@ -255,6 +255,6 @@ describe Coast do
         coast.to_left(params)
       end
     end
-
   end
+
 end
