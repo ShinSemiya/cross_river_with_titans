@@ -20,7 +20,7 @@ describe Rubicon do
       let!(:max_size)    { 2 }
 
       it "matrix is initialized" do
-        rubicon = Coast.new(max_size, boat_payload)
+        rubicon = Rubicon.new(max_size, boat_payload)
         rubicon.set_up_matrix(max_size).should == [[1, 0, 1], [1, 1, 1], [1, 0, 1]]
       end
     end
@@ -29,7 +29,7 @@ describe Rubicon do
       let!(:max_size){ 5 }
 
       it "matrix is initialized" do
-        rubicon = Coast.new(max_size, boat_payload)
+        rubicon = Rubicon.new(max_size, boat_payload)
         rubicon.set_up_matrix(max_size).should == [[1, 0, 0, 0, 0, 1], [1, 1, 0, 0, 0, 1], [1, 0, 1, 0, 0, 1],
                                                  [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 1, 1], [1, 0, 0, 0, 0, 1]]
       end
@@ -241,18 +241,6 @@ describe Rubicon do
     context "in NG_cell" do
       it "return false" do
         rubicon.is_ok?(1, 2).should be_false
-      end
-    end
-  end
-
-  describe "battery" do
-    context "in NG_cell" do
-      it "return false" do
-        params =
-            {   :log  => "00,",
-                :from => { :t => 0, :s => 0 },
-            }
-        rubicon.battery(params)
       end
     end
   end

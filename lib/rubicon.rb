@@ -15,7 +15,7 @@ class Rubicon
 
   def battery(s = 0, t = 0, log = '00,')
     to_right({ :log => log,
-                     :from => { :s => s, :t => t, }})
+               :from => { :s => s, :t => t, }})
     print_succeed_log
   end
 
