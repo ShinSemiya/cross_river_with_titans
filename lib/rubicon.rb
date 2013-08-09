@@ -141,7 +141,7 @@ class Rubicon
 
   # 配置(s, t)にしたとき食べられないか
   def is_ok?(s, t)
-    in_range?(t) && in_range?(s) && matrix[t][s] == 1
+    in_range?(t) && in_range?(s) && matrix[s][t] == 1
   end
 
   def is_ok_to_right?(battery_params)
@@ -197,13 +197,13 @@ class Rubicon
   # 座標(x,y) = 0なら兵士は巨人に食べられるので、移動できない
   def set_up_matrix(matrix_size)
     matrix = []
-    0.upto(matrix_size) {|t| matrix << set_up_row(t) }
+    0.upto(matrix_size) {|soldiers| matrix << set_up_row(soldiers) }
     matrix
   end
 
-  def set_up_row(titans)
+  def set_up_row(soldiers)
     row = []
-    0.upto(max_number) {|soldiers| row << set_up_cell(soldiers, titans) }
+    0.upto(max_number) {|titans| row << set_up_cell(soldiers, titans) }
     row
   end
 
