@@ -238,7 +238,7 @@ describe Coast do
 
     context "in NG_cell" do
       it "return false" do
-        coast.is_ok?(2, 1).should be_false
+        coast.is_ok?(1, 2).should be_false
       end
     end
   end

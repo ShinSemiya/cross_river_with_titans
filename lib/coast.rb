@@ -1,5 +1,5 @@
 class Coast
-  attr_reader :max_number, :matrix, :payload, :failed_log
+  attr_reader :max_number, :matrix, :payload
 
   # numberにより配置される兵士と巨人の数を可変としている
   # この実装ではSoldierとTitanと数は同数しか対応していない
@@ -7,9 +7,6 @@ class Coast
     @max_number = number
     @matrix     = set_up_matrix(number)
     @payload    = payload
-    @left_titans_number   = 0
-    @left_soldiers_number = 0
-    @failed_log = []
   end
 
 =begin
@@ -30,7 +27,7 @@ class Coast
 5. 記録取る
 6. 運ぶ
 =end
-  def battery(s = 0, t = 0, log = '')
+  def battery(s = 0, t = 0, log = '00,')
     to_right_coast({ :log => log,
                      :from => { :s => s, :t => t, }})
   end
@@ -57,34 +54,38 @@ class Coast
   end
 
   def to_right_coast(battery_params)
+    puts "=====right========================="
     # 右岸に向かうボートの乗員数は常に２人とする
     passengers_number = payload
     # 乗員数内の巨人と兵士の人数の組み合わせを試す
     passengers_number.downto(0) do |titans_passengers_number|
       soldiers_passenger_number = passengers_number - titans_passengers_number
+
       battery_params[:to]       = { :s => soldiers_passenger_number, :t => titans_passengers_number, }
 
       if is_ok_to_right?(battery_params) && # この人数は位置にして大丈夫か
           is_progress?(battery_params)   && # 一往復前と比較して前進しているか？
-          log_check_in_left?(battery_params, titans_passengers_number, soldiers_passenger_number) #以前に試行した経路では？
+          log_check?(battery_params)
 
-        battery_params = edit_params_in_right(battery_params)
 
         if cross_all?(battery_params)
           # 全員渡りきったので表示処理
+          battery_params = edit_params_in_right(battery_params)
           print_suceed_log(battery_params)
         else
+          battery_params = edit_params_in_right(battery_params)
           to_left_coast(battery_params)
         end
       else
         battery_params[:to] = {:s => soldiers_passenger_number, :t => titans_passengers_number }
-        regist_failed_log(battery_params)
+        puts now_log(battery_params)
         puts "失敗"
       end
     end
   end
 
   def to_left_coast(battery_params)
+    puts "=====left========================="
     1.upto(@payload) do |passengers_number|
       passengers_number.downto(0) do |titans_passengers_number|
         soldiers_passenger_number = passengers_number - titans_passengers_number
@@ -95,7 +96,8 @@ class Coast
 
           battery_retry(battery_params)
         else
-          regist_failed_log(battery_params)
+          battery_params[:to] = {:s => soldiers_passenger_number, :t => titans_passengers_number }
+          puts now_log(battery_params)
           "失敗"
         end
       end
@@ -137,12 +139,6 @@ class Coast
     "#{s}#{t},"
   end
 
-  def log_check_in_left?(battery_params, titans_passengers_number, soldiers_passenger_number)
-    battery_params[:to] = { :s => soldiers_passenger_number, :t => titans_passengers_number }
-    log = now_log(battery_params)
-    return (log.length < 100) && failed_log.index(log).nil?
-  end
-
   # 無限ループ予防措置
   def log_check?(battery_params)
     return (now_log(battery_params).length < 100)
@@ -154,8 +150,11 @@ class Coast
   end
 
   def is_ok_to_right?(battery_params)
-    is_ok?(battery_params[:from][:s] + battery_params[:to][:s],
-           battery_params[:from][:t] + battery_params[:to][:t])
+    puts battery_params
+    is_ok?(battery_params[:from][:s] +
+               battery_params[:to][:s],
+           battery_params[:from][:t] +
+               battery_params[:to][:t])
   end
 
   def is_ok_to_left?(battery_params)
@@ -198,14 +197,14 @@ class Coast
     0
   end
 
-  def regist_failed_log(battery_params)
-    @failed_log << now_log(battery_params)
-  end
-
   def now_log(battery_params)
     battery_params[:log] + generate_log(battery_params[:to][:t],battery_params[:to][:s])
   end
 end
-
+puts "=========================================="
 rubicon =Coast.new
-rubicon.battery
+rubicon.battery(0, 0, "00,")
+puts "=========================================="
+puts "=========================================="
+puts "=========================================="
+puts "=========================================="
