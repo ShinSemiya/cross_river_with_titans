@@ -30,30 +30,30 @@ class Coast
 5. 記録取る
 6. 運ぶ
 =end
-  def battery(t = 0, s = 0, log = '')
+  def battery(s = 0, t = 0, log = '')
     to_right_coast({ :log => log,
-                     :from => { :t => t, :s => s }})
+                     :from => { :s => s, :t => t, }})
   end
 
   def edit_params_in_right(battery_params)
     # 右岸到着時の巨人と兵士の人数の計算
-    new_titans_number   = battery_params[:from][:t] + battery_params[:to][:t]
     new_soldiers_number = battery_params[:from][:s] + battery_params[:to][:s]
+    new_titans_number   = battery_params[:from][:t] + battery_params[:to][:t]
 
     log = battery_params[:log] + generate_log(new_titans_number, new_soldiers_number)
 
-    return { :log  => log, :from => { :t => new_titans_number, :s => new_soldiers_number } }
+    return { :log  => log, :from => { :s => new_soldiers_number, :t => new_titans_number, } }
   end
 
 
   def edit_params_in_left(battery_params)
     # 左岸到着時の巨人と兵士の人数の計算
-    after_battery_titans   = battery_params[:from][:t] - battery_params[:to][:t]
     after_battery_soldiers = battery_params[:from][:s] - battery_params[:to][:s]
+    after_battery_titans   = battery_params[:from][:t] - battery_params[:to][:t]
 
     log = battery_params[:log] + generate_log(after_battery_titans, after_battery_soldiers)
 
-    return {:log => log, :from => {:t => after_battery_titans, :s => after_battery_soldiers },}
+    return {:log => log, :from => { :s => after_battery_soldiers, :t => after_battery_titans, },}
   end
 
   def to_right_coast(battery_params)
@@ -62,7 +62,7 @@ class Coast
     # 乗員数内の巨人と兵士の人数の組み合わせを試す
     passengers_number.downto(0) do |titans_passengers_number|
       soldiers_passenger_number = passengers_number - titans_passengers_number
-      battery_params[:to]       = { :t => titans_passengers_number, :s => soldiers_passenger_number }
+      battery_params[:to]       = { :s => soldiers_passenger_number, :t => titans_passengers_number, }
 
       if is_ok_to_right?(battery_params) && # この人数は位置にして大丈夫か
           is_progress?(battery_params)   && # 一往復前と比較して前進しているか？
@@ -77,7 +77,7 @@ class Coast
           to_left_coast(battery_params)
         end
       else
-        battery_params[:to] = { :t => titans_passengers_number, :s => soldiers_passenger_number }
+        battery_params[:to] = {:s => soldiers_passenger_number, :t => titans_passengers_number }
         regist_failed_log(battery_params)
         puts "失敗"
       end
@@ -88,9 +88,11 @@ class Coast
     1.upto(@payload) do |passengers_number|
       passengers_number.downto(0) do |titans_passengers_number|
         soldiers_passenger_number = passengers_number - titans_passengers_number
-        battery_params[:to] = { :t => titans_passengers_number, :s => soldiers_passenger_number }
+        battery_params[:to] = { :s => soldiers_passenger_number, :t => titans_passengers_number }
 
-        if counter_battery?(battery_params)
+        if is_ok_to_left?(battery_params) &&
+           is_progress?(battery_params)
+
           battery_retry(battery_params)
         else
           regist_failed_log(battery_params)
@@ -105,15 +107,6 @@ class Coast
     to_right_coast(new_battery_params)
   end
 
-  # 一往復で巨人か兵士か１人以上右岸に渡ったか？
-  def counter_battery?(battery_params)
-    # 「往復前の人数 + 右岸に渡った人数 - 左岸に渡った人数」で左岸にもどったときの人数配置を計算
-    result =
-        is_ok_to_left?(battery_params) &&
-            log_check?(battery_params) &&
-            is_progress?(battery_params)
-    result
-  end
 
   def is_progress?(battery_params)
     # 右岸にいるときに比較
@@ -213,3 +206,6 @@ class Coast
     battery_params[:log] + generate_log(battery_params[:to][:t],battery_params[:to][:s])
   end
 end
+
+rubicon =Coast.new
+rubicon.battery
