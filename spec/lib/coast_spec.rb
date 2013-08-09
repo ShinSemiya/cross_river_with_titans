@@ -40,14 +40,14 @@ describe Coast do
     context "y is 0" do
       it "return true" do
         coast.matrix[1][0].should == 1
-        coast.is_ok?(1, 0).should be_true
+        coast.is_ok?(0, 1).should be_true
       end
     end
 
     context "y is max_number" do
       it "return true" do
         coast.matrix[2][3].should == 1
-        coast.is_ok?(2, 3).should be_true
+        coast.is_ok?(3, 2).should be_true
       end
     end
 
@@ -60,13 +60,13 @@ describe Coast do
 
     context "others" do
       it "return false" do
-        coast.is_ok?(0, 1).should be_false
+        coast.is_ok?(1, 0).should be_false
       end
     end
 
     context "out of matrix" do
       it "return false" do
-        coast.is_ok?(4, 6).should be_false
+        coast.is_ok?(6, 4).should be_false
       end
     end
   end

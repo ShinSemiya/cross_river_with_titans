@@ -138,7 +138,7 @@ class Coast
   end
 
   def log_check_in_left?(battery_params, titans_passengers_number, soldiers_passenger_number)
-    battery_params[:to] = { :t => titans_passengers_number, :s => soldiers_passenger_number }
+    battery_params[:to] = { :s => soldiers_passenger_number, :t => titans_passengers_number }
     log = now_log(battery_params)
     return (log.length < 100) && failed_log.index(log).nil?
   end
@@ -149,18 +149,18 @@ class Coast
   end
 
   # 配置(t, s)にしたとき食べられないか
-  def is_ok?(t, s)
+  def is_ok?(s, t)
     in_range?(t) && in_range?(s) && matrix[t][s] == 1
   end
 
   def is_ok_to_right?(battery_params)
-    is_ok?(battery_params[:from][:t] + battery_params[:to][:t],
-           battery_params[:from][:s] + battery_params[:to][:s])
+    is_ok?(battery_params[:from][:s] + battery_params[:to][:s],
+           battery_params[:from][:t] + battery_params[:to][:t])
   end
 
   def is_ok_to_left?(battery_params)
-    is_ok?(battery_params[:from][:t] - battery_params[:to][:t],
-           battery_params[:from][:s] - battery_params[:to][:s])
+    is_ok?(battery_params[:from][:s] - battery_params[:to][:s],
+           battery_params[:from][:t] - battery_params[:to][:t])
   end
 
   def cross_all?(battery_params)
