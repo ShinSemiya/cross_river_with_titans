@@ -120,8 +120,6 @@ describe Rubicon do
     end
   end
 
-
-
   describe "#edit_params_to_left" do
     it "return editted_params" do
       params =

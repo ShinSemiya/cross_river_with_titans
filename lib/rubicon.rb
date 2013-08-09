@@ -114,7 +114,7 @@ class Rubicon
     number = 1
     succeed_logs.each do |succeed_log|
       print_tracs(number, succeed_log)
-      number + 1
+      number += 1
     end
   end
 
@@ -216,10 +216,6 @@ class Rubicon
     0
   end
 end
-puts "=========================================="
+
 rubicon = Rubicon.new
 rubicon.battery(0, 0, "00,")
-puts "=========================================="
-puts "=========================================="
-puts "=========================================="
-puts "=========================================="
