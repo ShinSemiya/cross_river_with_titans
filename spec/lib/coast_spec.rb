@@ -37,21 +37,21 @@ describe Coast do
   end
 
   describe "#is_ok?" do
-    context "y is 0" do
+    context "soldier is 0" do
       it "return true" do
         coast.matrix[1][0].should == 1
         coast.is_ok?(0, 1).should be_true
       end
     end
 
-    context "y is max_number" do
+    context "soldiers are max_number" do
       it "return true" do
         coast.matrix[2][3].should == 1
         coast.is_ok?(3, 2).should be_true
       end
     end
 
-    context "x = y" do
+    context "soldier == titan" do
       it "return true" do
         coast.is_ok?(1, 1).should be_true
         coast.is_ok?(2, 2).should be_true
@@ -121,28 +121,28 @@ describe Coast do
 
 
 
-  describe "#edit_params_in_right" do
+  describe "#edit_params_to_left" do
     it "return editted_params" do
       params =
           {   :log  => "11,",
               :from => { :t => 1, :s => 1 },
               :to   => { :t => 1, :s => 1 },
           }
-      result = coast.edit_params_in_right(params)
+      result = coast.edit_params_to_left(params)
       result[:log].should  == '11,22,'
       result[:from].should == { :t => 2, :s => 2 }
       result[:to].should   be_nil
     end
   end
 
-  describe "#edit_params_in_left" do
+  describe "#edit_paramsto_right" do
     it "return editted_params" do
       params =
           {   :log  => "33,",
               :from => { :t => 3, :s => 3 },
               :to   => { :t => 2, :s => 0 },
           }
-      result = coast.edit_params_in_left(params)
+      result = coast.edit_params_to_right(params)
       result[:log].should  == '33,31,'
       result[:from].should == { :t => 1, :s => 3 }
       result[:to].should   be_nil
@@ -155,7 +155,7 @@ describe Coast do
           {   :log  => "22,",
               :from => { :t => 2, :s => 2 },
           }
-      result = coast.to_right_coast(params)
+      result = coast.to_right(params)
     end
   end
 
@@ -163,8 +163,9 @@ describe Coast do
     context "all in right" do
       it "return true" do
         params =
-            {   :log  => "22,,11,33,",
-                :from => { :t => 3, :s => 3 },
+            {   :log  => "22,,11,23,",
+                :from => { :t => 2, :s => 3 },
+                :to   => { :t => 1, :s => 0 },
             }
         coast.cross_all?(params).should be_true
       end
@@ -175,6 +176,7 @@ describe Coast do
         params =
             {   :log  => "22,,11,33,22,",
                 :from => { :t => 2, :s => 2 },
+                :to   => { :t => 1, :s => 0 },
             }
         coast.cross_all?(params).should be_false
       end
@@ -241,5 +243,18 @@ describe Coast do
         coast.is_ok?(1, 2).should be_false
       end
     end
+  end
+
+  describe "to_left" do
+    context "in NG_cell" do
+      it "return false" do
+        params =
+            {   :log  => "22,11,21,",
+                :from => { :t => 1, :s => 1 },
+            }
+        coast.to_left(params)
+      end
+    end
+
   end
 end
