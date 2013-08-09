@@ -77,8 +77,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "",
-                :from =>{ :t => 3, :s => 0 },
-                :to   =>{ :t => 0, :s => 1 },
+                :from =>{ :s => 0, :t => 3 },
+                :to   =>{ :s => 1, :t => 0 },
             }
         rubicon.is_ok_to_right?(params).should be_false
       end
@@ -88,8 +88,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "",
-                :from =>{ :t => 3, :s => 0 },
-                :to   =>{ :t => 1, :s => 0 },
+                :from =>{ :s => 0, :t => 3 },
+                :to   =>{ :s => 0, :t => 1 },
             }
         rubicon.is_ok_to_right?(params).should be_false
       end
@@ -101,8 +101,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "",
-                :from =>{ :t => 3, :s => 0 },
-                :to   =>{ :t => 1, :s => 1 },
+                :from =>{ :s => 0, :t => 3 },
+                :to   =>{ :s => 1, :t => 1 },
             }
         rubicon.is_ok_to_left?(params).should be_false
       end
@@ -112,8 +112,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "",
-                :from =>{ :t => 3, :s => 0 },
-                :to   =>{ :t => 1, :s => 1 },
+                :from =>{ :s => 0, :t => 3 },
+                :to   =>{ :s => 1, :t => 1 },
             }
         rubicon.is_ok_to_left?(params).should be_false
       end
@@ -126,12 +126,12 @@ describe Rubicon do
     it "return editted_params" do
       params =
           {   :log  => "11,",
-              :from => { :t => 1, :s => 1 },
-              :to   => { :t => 1, :s => 1 },
+              :from => { :s => 1, :t => 1 },
+              :to   => { :s => 1, :t => 1 },
           }
       result = rubicon.edit_params_to_left(params)
       result[:log].should  == '11,22,'
-      result[:from].should == { :t => 2, :s => 2 }
+      result[:from].should == { :s => 2, :t => 2 }
       result[:to].should   be_nil
     end
   end
@@ -140,12 +140,12 @@ describe Rubicon do
     it "return editted_params" do
       params =
           {   :log  => "33,",
-              :from => { :t => 3, :s => 3 },
-              :to   => { :t => 2, :s => 0 },
+              :from => { :s => 3, :t => 3,  },
+              :to   => { :s => 0, :t => 2 },
           }
       result = rubicon.edit_params_to_right(params)
       result[:log].should  == '33,31,'
-      result[:from].should == { :t => 1, :s => 3 }
+      result[:from].should == { :s => 3, :t => 1 }
       result[:to].should   be_nil
     end
   end
@@ -154,7 +154,7 @@ describe Rubicon do
     it "return editted_params" do
       params =
           {   :log  => "22,",
-              :from => { :t => 2, :s => 2 },
+              :from => { :s => 2, :t => 2 },
           }
       result = rubicon.to_right(params)
     end
@@ -165,8 +165,8 @@ describe Rubicon do
       it "return true" do
         params =
             {   :log  => "22,,11,23,",
-                :from => { :t => 2, :s => 3 },
-                :to   => { :t => 1, :s => 0 },
+                :from => { :s => 3, :t => 2 },
+                :to   => { :s => 0, :t => 1 },
             }
         rubicon.cross_all?(params).should be_true
       end
@@ -176,8 +176,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "22,,11,33,22,",
-                :from => { :t => 2, :s => 2 },
-                :to   => { :t => 1, :s => 0 },
+                :from => { :s => 2, :t => 2 },
+                :to   => { :s => 0, :t => 1 },
             }
         rubicon.cross_all?(params).should be_false
       end
@@ -189,8 +189,8 @@ describe Rubicon do
       it "return true" do
         params =
             {   :log  => "22,,11,20,",
-                :from => { :t => 2, :s => 0 },
-                :to   => { :t => 1, :s => 0 },
+                :from => { :s => 0, :t => 2 },
+                :to   => { :s => 0, :t => 1 },
             }
         rubicon.is_ok_to_right?(params).should be_true
       end
@@ -200,8 +200,8 @@ describe Rubicon do
       it "return false" do
         params =
             {   :log  => "31,,",
-                :from => { :t => 1, :s => 1 },
-                :to   => { :t => 1, :s => 0 },
+                :from => { :s => 1, :t => 1 },
+                :to   => { :s => 0, :t => 1 },
             }
         rubicon.is_ok_to_right?(params).should be_false
       end
@@ -213,8 +213,8 @@ describe Rubicon do
       it "return true" do
         params =
             {   :log  => "22,,11,20,",
-                :from => { :t => 3, :s => 0 },
-                :to   => { :t => 1, :s => 0 },
+                :from => { :s => 0, :t => 3 },
+                :to   => { :s => 0, :t => 1 },
             }
         rubicon.is_ok_to_left?(params).should be_true
       end
