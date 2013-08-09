@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Coast do
-  let!(:coast){ Coast.new(3, 2) }
+describe Rubicon do
+  let!(:rubicon){ Rubicon.new(3, 2) }
 
   describe "#initialize" do
     it "max_number is 3" do
-      coast.max_number.should == 3
+      rubicon.max_number.should == 3
     end
 
     it "matrix is initialized" do
-      coast.matrix.should == [[1, 0, 0, 1], [1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1]]
+      rubicon.matrix.should == [[1, 0, 0, 1], [1, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 1]]
     end
   end
 
@@ -20,8 +20,8 @@ describe Coast do
       let!(:max_size)    { 2 }
 
       it "matrix is initialized" do
-        coast = Coast.new(max_size, boat_payload)
-        coast.set_up_matrix(max_size).should == [[1, 0, 1], [1, 1, 1], [1, 0, 1]]
+        rubicon = Coast.new(max_size, boat_payload)
+        rubicon.set_up_matrix(max_size).should == [[1, 0, 1], [1, 1, 1], [1, 0, 1]]
       end
     end
 
@@ -29,8 +29,8 @@ describe Coast do
       let!(:max_size){ 5 }
 
       it "matrix is initialized" do
-        coast = Coast.new(max_size, boat_payload)
-        coast.set_up_matrix(max_size).should == [[1, 0, 0, 0, 0, 1], [1, 1, 0, 0, 0, 1], [1, 0, 1, 0, 0, 1],
+        rubicon = Coast.new(max_size, boat_payload)
+        rubicon.set_up_matrix(max_size).should == [[1, 0, 0, 0, 0, 1], [1, 1, 0, 0, 0, 1], [1, 0, 1, 0, 0, 1],
                                                  [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 1, 1], [1, 0, 0, 0, 0, 1]]
       end
     end
@@ -39,34 +39,34 @@ describe Coast do
   describe "#is_ok?" do
     context "soldier is 0" do
       it "return true" do
-        coast.matrix[1][0].should == 1
-        coast.is_ok?(0, 1).should be_true
+        rubicon.matrix[1][0].should == 1
+        rubicon.is_ok?(0, 1).should be_true
       end
     end
 
     context "soldiers are max_number" do
       it "return true" do
-        coast.matrix[2][3].should == 1
-        coast.is_ok?(3, 2).should be_true
+        rubicon.matrix[2][3].should == 1
+        rubicon.is_ok?(3, 2).should be_true
       end
     end
 
     context "soldier == titan" do
       it "return true" do
-        coast.is_ok?(1, 1).should be_true
-        coast.is_ok?(2, 2).should be_true
+        rubicon.is_ok?(1, 1).should be_true
+        rubicon.is_ok?(2, 2).should be_true
       end
     end
 
     context "others" do
       it "return false" do
-        coast.is_ok?(1, 0).should be_false
+        rubicon.is_ok?(1, 0).should be_false
       end
     end
 
     context "out of matrix" do
       it "return false" do
-        coast.is_ok?(6, 4).should be_false
+        rubicon.is_ok?(6, 4).should be_false
       end
     end
   end
@@ -79,7 +79,7 @@ describe Coast do
                 :from =>{ :t => 3, :s => 0 },
                 :to   =>{ :t => 0, :s => 1 },
             }
-        coast.is_ok_to_right?(params).should be_false
+        rubicon.is_ok_to_right?(params).should be_false
       end
     end
 
@@ -90,7 +90,7 @@ describe Coast do
                 :from =>{ :t => 3, :s => 0 },
                 :to   =>{ :t => 1, :s => 0 },
             }
-        coast.is_ok_to_right?(params).should be_false
+        rubicon.is_ok_to_right?(params).should be_false
       end
     end
   end
@@ -103,7 +103,7 @@ describe Coast do
                 :from =>{ :t => 3, :s => 0 },
                 :to   =>{ :t => 1, :s => 1 },
             }
-        coast.is_ok_to_left?(params).should be_false
+        rubicon.is_ok_to_left?(params).should be_false
       end
     end
 
@@ -114,7 +114,7 @@ describe Coast do
                 :from =>{ :t => 3, :s => 0 },
                 :to   =>{ :t => 1, :s => 1 },
             }
-        coast.is_ok_to_left?(params).should be_false
+        rubicon.is_ok_to_left?(params).should be_false
       end
     end
   end
@@ -128,7 +128,7 @@ describe Coast do
               :from => { :t => 1, :s => 1 },
               :to   => { :t => 1, :s => 1 },
           }
-      result = coast.edit_params_to_left(params)
+      result = rubicon.edit_params_to_left(params)
       result[:log].should  == '11,22,'
       result[:from].should == { :t => 2, :s => 2 }
       result[:to].should   be_nil
@@ -142,7 +142,7 @@ describe Coast do
               :from => { :t => 3, :s => 3 },
               :to   => { :t => 2, :s => 0 },
           }
-      result = coast.edit_params_to_right(params)
+      result = rubicon.edit_params_to_right(params)
       result[:log].should  == '33,31,'
       result[:from].should == { :t => 1, :s => 3 }
       result[:to].should   be_nil
@@ -155,7 +155,7 @@ describe Coast do
           {   :log  => "22,",
               :from => { :t => 2, :s => 2 },
           }
-      result = coast.to_right(params)
+      result = rubicon.to_right(params)
     end
   end
 
@@ -167,7 +167,7 @@ describe Coast do
                 :from => { :t => 2, :s => 3 },
                 :to   => { :t => 1, :s => 0 },
             }
-        coast.cross_all?(params).should be_true
+        rubicon.cross_all?(params).should be_true
       end
     end
 
@@ -178,7 +178,7 @@ describe Coast do
                 :from => { :t => 2, :s => 2 },
                 :to   => { :t => 1, :s => 0 },
             }
-        coast.cross_all?(params).should be_false
+        rubicon.cross_all?(params).should be_false
       end
     end
   end
@@ -191,7 +191,7 @@ describe Coast do
                 :from => { :t => 2, :s => 0 },
                 :to   => { :t => 1, :s => 0 },
             }
-        coast.is_ok_to_right?(params).should be_true
+        rubicon.is_ok_to_right?(params).should be_true
       end
     end
 
@@ -202,7 +202,7 @@ describe Coast do
                 :from => { :t => 1, :s => 1 },
                 :to   => { :t => 1, :s => 0 },
             }
-        coast.is_ok_to_right?(params).should be_false
+        rubicon.is_ok_to_right?(params).should be_false
       end
     end
   end
@@ -215,7 +215,7 @@ describe Coast do
                 :from => { :t => 3, :s => 0 },
                 :to   => { :t => 1, :s => 0 },
             }
-        coast.is_ok_to_left?(params).should be_true
+        rubicon.is_ok_to_left?(params).should be_true
       end
     end
 
@@ -226,7 +226,7 @@ describe Coast do
                 :from => { :t => 3, :s => 0 },
                 :to   => { :t => 0, :s => 1 },
             }
-        coast.is_ok_to_left?(params).should be_false
+        rubicon.is_ok_to_left?(params).should be_false
       end
     end
   end
@@ -234,13 +234,13 @@ describe Coast do
   describe "#is_ok?" do
     context "in OK_cell" do
       it "return true" do
-        coast.is_ok?(3, 0).should be_true
+        rubicon.is_ok?(3, 0).should be_true
       end
     end
 
     context "in NG_cell" do
       it "return false" do
-        coast.is_ok?(1, 2).should be_false
+        rubicon.is_ok?(1, 2).should be_false
       end
     end
   end
@@ -249,12 +249,11 @@ describe Coast do
     context "in NG_cell" do
       it "return false" do
         params =
-            {   :log  => "22,11,21,",
-                :from => { :t => 1, :s => 1 },
+            {   :log  => "00,",
+                :from => { :t => 0, :s => 0 },
             }
-        coast.to_left(params)
+        rubicon.battery(params)
       end
     end
   end
-
 end

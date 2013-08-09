@@ -1,4 +1,4 @@
-class Coast
+class Rubicon
   BIG_NUMBER = 100
   attr_reader :max_number, :matrix, :payload, :failed_number, :succeed_number, :succeed_logs
 
@@ -217,7 +217,7 @@ class Coast
   end
 end
 puts "=========================================="
-rubicon =Coast.new
+rubicon = Rubicon.new
 rubicon.battery(0, 0, "00,")
 puts "=========================================="
 puts "=========================================="
