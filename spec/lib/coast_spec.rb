@@ -71,50 +71,179 @@ describe Coast do
     end
   end
 
-  describe "#ship?" do
-    context "dead rock" do
+  describe "#is_ok_to_right?" do
+    context "assrot in NG" do
       it "return false" do
-        coast.ship?(3, 3).should be_false
+        params =
+            {   :log  => "",
+                :from =>{ :t => 3, :s => 0 },
+                :to   =>{ :t => 0, :s => 1 },
+            }
+        coast.is_ok_to_right?(params).should be_false
       end
+    end
 
+    context "over range" do
       it "return false" do
-        coast.ship?(3, 3).should be_false
+        params =
+            {   :log  => "",
+                :from =>{ :t => 3, :s => 0 },
+                :to   =>{ :t => 1, :s => 0 },
+            }
+        coast.is_ok_to_right?(params).should be_false
       end
     end
   end
 
-  describe "#ship_to_right?" do
-    context "dead rock" do
+  describe "#is_ok_to_left?" do
+    context "assrot in NG" do
       it "return false" do
-        coast.ship_to_right?(0, 0).should be_false
+        params =
+            {   :log  => "",
+                :from =>{ :t => 3, :s => 0 },
+                :to   =>{ :t => 1, :s => 1 },
+            }
+        coast.is_ok_to_left?(params).should be_false
       end
+    end
 
-      it "return true" do
-        coast.ship_to_right?(3, 3).should be_true
-      end
-
-      it "return true" do
-        coast.ship_to_right?(3, 5).should be_false
-      end
-
-      it "return true" do
-        coast.ship_to_right?(1, 2).should be_false
+    context "under range" do
+      it "return false" do
+        params =
+            {   :log  => "",
+                :from =>{ :t => 3, :s => 0 },
+                :to   =>{ :t => 1, :s => 1 },
+            }
+        coast.is_ok_to_left?(params).should be_false
       end
     end
   end
 
-  describe "#ship_for_return?" do
-    context "dead rock" do
-      it "return false" do
-        coast.ship_return_from?(0, 0).should be_false
-      end
 
+
+  describe "#edit_params_in_right" do
+    it "return editted_params" do
+      params =
+          {   :log  => "11,",
+              :from => { :t => 1, :s => 1 },
+              :to   => { :t => 1, :s => 1 },
+          }
+      result = coast.edit_params_in_right(params)
+      result[:log].should  == '11,22,'
+      result[:from].should == { :t => 2, :s => 2 }
+      result[:to].should   be_nil
+    end
+  end
+
+  describe "#edit_params_in_left" do
+    it "return editted_params" do
+      params =
+          {   :log  => "33,",
+              :from => { :t => 3, :s => 3 },
+              :to   => { :t => 2, :s => 0 },
+          }
+      result = coast.edit_params_in_left(params)
+      result[:log].should  == '33,31,'
+      result[:from].should == { :t => 1, :s => 3 }
+      result[:to].should   be_nil
+    end
+  end
+
+  describe "#to_right_coast" do
+    it "return editted_params" do
+      params =
+          {   :log  => "22,",
+              :from => { :t => 2, :s => 2 },
+          }
+      result = coast.to_right_coast(params)
+    end
+  end
+
+  describe "#cross_all?" do
+    context "all in right" do
+      it "return true" do
+        params =
+            {   :log  => "22,,11,33,",
+                :from => { :t => 3, :s => 3 },
+            }
+        coast.cross_all?(params).should be_true
+      end
+    end
+
+    context "NOT all in right" do
       it "return false" do
-        coast.ship_return_from?(3, 3).should be_true
+        params =
+            {   :log  => "22,,11,33,22,",
+                :from => { :t => 2, :s => 2 },
+            }
+        coast.cross_all?(params).should be_false
       end
     end
   end
 
+  describe "#is_ok_to_right?" do
+    context "to OK_cell" do
+      it "return true" do
+        params =
+            {   :log  => "22,,11,20,",
+                :from => { :t => 2, :s => 0 },
+                :to   => { :t => 1, :s => 0 },
+            }
+        coast.is_ok_to_right?(params).should be_true
+      end
+    end
+
+    context "to NG_cell" do
+      it "return false" do
+        params =
+            {   :log  => "31,,",
+                :from => { :t => 1, :s => 1 },
+                :to   => { :t => 1, :s => 0 },
+            }
+        coast.is_ok_to_right?(params).should be_false
+      end
+    end
+  end
+
+  describe "#is_ok_to_left?" do
+    context "to OK_cell" do
+      it "return true" do
+        params =
+            {   :log  => "22,,11,20,",
+                :from => { :t => 3, :s => 0 },
+                :to   => { :t => 1, :s => 0 },
+            }
+        coast.is_ok_to_left?(params).should be_true
+      end
+    end
+
+    context "to NG_cell" do
+      it "return false" do
+        params =
+            {   :log  => "31,,",
+                :from => { :t => 3, :s => 0 },
+                :to   => { :t => 0, :s => 1 },
+            }
+        coast.is_ok_to_left?(params).should be_false
+      end
+    end
+  end
+
+  describe "#is_ok?" do
+    context "in OK_cell" do
+      it "return true" do
+        coast.is_ok?(3, 0).should be_true
+      end
+    end
+
+    context "in NG_cell" do
+      it "return false" do
+        coast.is_ok?(2, 1).should be_false
+      end
+    end
+  end
+
+=begin
   describe "#try?" do
     it "try!!" do
       coast.try
@@ -179,4 +308,11 @@ describe Coast do
       coast.to_right_first(hash)
     end
   end
+
+  describe "#battery" do
+    it "hoge" do
+      coast.battery
+    end
+  end
+=end
 end
