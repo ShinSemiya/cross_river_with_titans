@@ -145,7 +145,8 @@ describe Coast do
   describe "#edit_params_for_recursive" do
     it "try" do
       hash =
-      { :from     => { :t => 2, :s => 2, :log => "00,00," },
+      { :log =>  "00,00,",
+        :from     => { :t => 2, :s => 2,  },
         :to_left  => { :t => 1, :s => 1 },
         :to_right => { :t => 1, :s => 0 },
       }
@@ -160,7 +161,9 @@ describe Coast do
   describe "#to_left" do
     it "try" do
       hash =
-          { :from     => { :t => 2, :s => 2, :log => "00,00," },
+          {
+            :log => "00,00,",
+            :from     => { :t => 2, :s => 2 },
             :to_right => { :t => 1, :s => 1 },
           }
       coast.to_left(hash)

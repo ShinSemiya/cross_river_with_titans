@@ -36,9 +36,6 @@ class Coast
 
   def to_right_first(battery_params)
     to_right(battery_params)
-    puts "-----------failed_log-------------"
-    puts fail_log
-
   end
   def to_right(battery_params)
     # 右岸に向かうボートの乗員数は常に２人とする
@@ -125,10 +122,6 @@ class Coast
 
     after_battery[0] > before_battery[0] || # 兵士が１人以上渡っている
     after_battery[1] > before_battery[1]    # 巨人が１人以上渡っている
-
-
-#    (battery_params[:to_right][:t] > battery_params[:to_left][:t] ||
-#     battery_params[:to_right][:s] > battery_params[:to_left][:s] )
   end
 
   def any_to_right_in_right?(battery_params)
